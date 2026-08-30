@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>삼성전자 분석 리포트</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --card:#131a2c; --card2:#0f1526; --line:#232b45;
+    --text:#eef1f8; --sub:#8792ad; --cyan:#22d3ee; --pink:#ec4899;
+    --green:#22c55e; --red:#ef4444; --orange:#f59e0b; --blue:#3b82f6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Segoe UI','Malgun Gothic',sans-serif;
+    display:flex; justify-content:center; padding:24px 12px;
+  }
+  .sheet{width:100%; max-width:720px; display:flex; flex-direction:column; gap:14px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px 20px;}
+  .label{font-size:11px; color:var(--sub); letter-spacing:.03em; text-transform:uppercase; margin-bottom:10px;}
+
+  /* header */
+  .head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+  .head-left{display:flex; gap:12px; align-items:flex-start;}
+  .icon{width:46px; height:46px; border-radius:12px; flex:none;
+    background:linear-gradient(135deg,var(--cyan),var(--pink));}
+  .meta{font-size:11px; color:var(--sub); margin-bottom:4px;}
+  .title{font-size:22px; font-weight:800; display:flex; align-items:baseline; gap:8px;}
+  .title .code{font-size:14px; color:var(--sub); font-weight:600;}
+  .tagline{font-size:12px; color:var(--cyan); margin-top:4px;}
+  .head-right{text-align:right; font-size:11px; color:var(--sub);}
+  .head-right .opinion{font-size:15px; font-weight:800; color:var(--pink);}
+
+  /* price grid */
+  .grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  .stat{background:var(--card2); border-radius:10px; padding:10px; text-align:center;}
+  .stat .k{font-size:10px; color:var(--sub); margin-bottom:6px;}
+  .stat .v{font-size:16px; font-weight:800;}
+  .up{color:var(--red);} .down{color:var(--blue);} .pos{color:var(--green);}
+
+  .gauge-wrap{margin-top:16px;}
+  .gauge-track{position:relative; height:6px; border-radius:3px; margin:10px 0 6px;
+    background:linear-gradient(90deg,var(--blue),var(--pink));}
+  .gauge-dot{position:absolute; top:-5px; width:3px; height:16px; background:#fff; border-radius:2px;
+    transform:translateX(-50%);}
+  .gauge-labels{display:flex; justify-content:space-between; font-size:10px; color:var(--sub);}
+  .gauge-center{text-align:center; font-size:11px; color:var(--sub); margin-top:2px;}
+
+  /* score */
+  .score-row{display:flex; align-items:center; gap:18px;}
+  .score-circle{width:78px; height:78px; border-radius:50%; border:5px solid var(--cyan);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; flex:none;}
+  .score-circle .n{font-size:24px; font-weight:800; line-height:1;}
+  .score-circle .d{font-size:9px; color:var(--sub);}
+  .badge{display:inline-block; padding:4px 14px; border-radius:8px; font-weight:800; font-size:14px;}
+  .badge.buy{background:rgba(34,197,94,.15); color:var(--green); border:1px solid var(--green);}
+  .badge.hold{background:rgba(245,158,11,.15); color:var(--orange); border:1px solid var(--orange);}
+  .badge.sell{background:rgba(239,68,68,.15); color:var(--red); border:1px solid var(--red);}
+  .subscores{font-size:11px; color:var(--sub); margin-top:6px;}
+  .score-right{margin-left:auto; display:flex; gap:18px;}
+  .score-box{text-align:center;}
+  .score-box .k{font-size:10px; color:var(--sub);}
+  .score-box .v{font-size:15px; font-weight:800;}
+
+  /* bar chart */
+  .bar-row{display:flex; align-items:center; gap:10px; margin:8px 0;}
+  .bar-label{width:44px; font-size:11px; color:var(--sub); flex:none;}
+  .bar-track{flex:1; background:var(--card2); border-radius:5px; height:16px; position:relative; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:5px;}
+  .bar-fill.neg{background:var(--red);}
+  .bar-value{width:80px; text-align:right; font-size:12px; font-weight:700; flex:none;}
+
+  /* strengths / risks */
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .box{border-radius:12px; padding:14px; font-size:12px;}
+  .box.good{background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.35);}
+  .box.bad{background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.35);}
+  .box .box-title{font-weight:800; font-size:12px; margin-bottom:8px;}
+  .box.good .box-title{color:var(--green);}
+  .box.bad .box-title{color:var(--red);}
+  .box ul{margin:0; padding-left:16px; display:flex; flex-direction:column; gap:6px;}
+
+  /* conclusion */
+  .grid4b{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  .concl .k{font-size:10px; color:var(--sub); margin-bottom:6px;}
+  .concl .v{font-size:14px; font-weight:800;}
+
+  .footer{font-size:10px; color:var(--sub); line-height:1.6; padding:14px 4px 4px;}
+  .hashtags{margin-top:8px; color:var(--cyan);}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="card head">
+    <div class="head-left">
+      <div class="icon"></div>
+      <div>
+        <div class="meta">KOSPI · 종합 반도체 · 메모리/파운드리 · 2026.08.30 종가 기준</div>
+        <div class="title">삼성전자 <span class="code">005930</span></div>
+        <div class="tagline">AI 반도체 슈퍼사이클의 정점, 그러나 숨 고르기 국면</div>
+      </div>
+    </div>
+    <div class="head-right">
+      
+      투자의견 컨센서스<br>
+      <span class="opinion">4.04</span> / 5.0<br>
+      추정기관 24곳
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">PRICE · 52주 위치</div>
+    <div class="grid4">
+      <div class="stat"><div class="k">현재가</div><div class="v">257,000원</div></div>
+      <div class="stat"><div class="k">전일 대비</div>
+        <div class="v down">
+          ▼ 3.38%
+        </div>
+      </div>
+      <div class="stat"><div class="k">시가총액</div><div class="v">1,502.5조</div></div>
+      <div class="stat"><div class="k">12개월 수익률</div>
+        <div class="v pos">+268.7%</div>
+      </div>
+    </div>
+    <div class="gauge-wrap">
+      <div class="gauge-track">
+        <div class="gauge-dot" style="left:61.7%;"></div>
+      </div>
+      <div class="gauge-labels">
+        <span>67,500원 (25.09.01)</span>
+        <span>374,500원 (26.06.19)</span>
+      </div>
+      <div class="gauge-center">현재 257,000원 · 고점 대비 -31.4%</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">종합 판단</div>
+    <div class="score-row">
+      <div class="score-circle">
+        <div class="n">78</div>
+        <div class="d">/ 100</div>
+      </div>
+      <div>
+        <span class="badge buy">매수 (BUY)</span>
+        <div class="subscores">
+          
+          산업 90 · 성장성 95 ·
+          재무 85 · 해자 75 ·
+          기술적 55 · 리스크관리 50
+          
+        </div>
+      </div>
+      <div class="score-right">
+        <div class="score-box"><div class="k">컨센서스 목표주가</div>
+          <div class="v">491,875원</div></div>
+        <div class="score-box"><div class="k">상승여력</div>
+          <div class="v pos">+91.4%</div></div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="label">분기 영업이익 · 억원 (연결 기준)</div>
+    
+    <div class="bar-row">
+      <div class="bar-label">25Q2</div>
+      <div class="bar-track">
+        <div class="bar-fill "
+             style="width:5.2%; background:var(--cyan);"></div>
+      </div>
+      <div class="bar-value">46,761</div>
+    </div>
+    
+    <div class="bar-row">
+      <div class="bar-label">25Q3</div>
+      <div class="bar-track">
+        <div class="bar-fill "
+             style="width:13.6%; background:var(--cyan);"></div>
+      </div>
+      <div class="bar-value">121,661</div>
+    </div>
+    
+    <div class="bar-row">
+      <div class="bar-label">25Q4</div>
+      <div class="bar-track">
+        <div class="bar-fill "
+             style="width:22.4%; background:var(--cyan);"></div>
+      </div>
+      <div class="bar-value">200,737</div>
+    </div>
+    
+    <div class="bar-row">
+      <div class="bar-label">26Q1</div>
+      <div class="bar-track">
+        <div class="bar-fill "
+             style="width:64.0%; background:var(--cyan);"></div>
+      </div>
+      <div class="bar-value">572,328</div>
+    </div>
+    
+    <div class="bar-row">
+      <div class="bar-label">26Q2</div>
+      <div class="bar-track">
+        <div class="bar-fill "
+             style="width:100.0%; background:var(--cyan);"></div>
+      </div>
+      <div class="bar-value">894,924</div>
+    </div>
+    
+  </div>
+  
+
+  <div class="two-col">
+    <div class="box good">
+      <div class="box-title">강점 3</div>
+      <ul><li>분기 영업이익 폭증 — 25Q2 4.7조원 → 26Q2 89.5조원으로 4개 분기 만에 약 19배 급증, AI/HBM 반도체 슈퍼사이클의 최대 수혜주</li><li>컨센서스 추정 기준 PER 5.34배로 이익 대비 주가가 크게 저평가되어 있으며, 24개 기관 컨센서스 목표주가(491,875원) 대비 +91.4% 상승여력</li><li>시가총액 1,502조원의 압도적 대장주 지위와 투자의견 컨센서스 4.04/5.0의 견고한 매수 의견 분포</li></ul>
+    </div>
+    <div class="box bad">
+      <div class="box-title">리스크 3</div>
+      <ul><li>52주 고점(374,500원) 대비 -31.4% 조정 중이며 전일에도 -3.38% 하락 — 단기 기술적 모멘텀 약화 신호</li><li>트레일링 PER 39.15배(실적 기준)와 컨센서스 포워드 PER 5.34배(추정 기준) 간 괴리가 커, 실적 개선이 예상대로 실현되지 않으면 밸류에이션 재평가(디레이팅) 리스크</li><li>TSMC 등 파운드리 경쟁 심화, HBM 경쟁사 추격, 환율/관세 등 매크로 변수에 따른 실적 변동성 상존</li></ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">결론 · 어떻게 접근할 것인가</div>
+    <div class="grid4b">
+      <div class="concl"><div class="k">매수 구간</div><div class="v">23.0~25.5만원</div></div>
+      <div class="concl"><div class="k">목표주가</div><div class="v pos">491,875원</div></div>
+      <div class="concl"><div class="k">손절선</div><div class="v down">20.0만원 (-22%)</div></div>
+      <div class="concl"><div class="k">권고 비중</div><div class="v">3~5% 이내</div></div>
+    </div>
+    
+    <div style="margin-top:12px; font-size:12px; color:var(--sub); line-height:1.6;">이익 모멘텀과 포워드 밸류에이션(컨센서스 PER 5.34배)만 보면 여전히 매력적이나, 트레일링 PER은 39배로 아직 실적에 자신감이 완전히 반영되진 않았고, 이미 12개월 +269% 급등한 이후 고점 대비 -31% 조정을 받고 있는 국면이다. 추가 매수는 분할 접근하고, 반도체 업황 사이클의 정점 여부를 분기 실적 발표 때마다 재점검할 필요가 있다.</div>
+    
+  </div>
+
+  <div class="footer">
+    본 리포트는 DART 공시자료, 한국투자증권(KIS) 실시간 시세, 네이버 컨센서스 데이터를 기반으로 자동 생성되었으며, 일부 판단(종합점수·강점/리스크·매매전략)은 주관적 분석이 반영되어 있습니다.
+    투자 판단의 참고 자료일 뿐 투자 권유가 아니며, 투자 책임은 본인에게 있습니다. 생성 시각: 2026-08-30T18:30:11
+    <div class="hashtags">#삼성전자 #005930 #주식분석 #DART #컨센서스</div>
+  </div>
+
+</div>
+</body>
+</html>

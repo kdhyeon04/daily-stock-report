@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>{{ stock.name }} 분석 리포트</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --card:#131a2c; --card2:#0f1526; --line:#232b45;
+    --text:#eef1f8; --sub:#8792ad; --cyan:#22d3ee; --pink:#ec4899;
+    --green:#22c55e; --red:#ef4444; --orange:#f59e0b; --blue:#3b82f6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Segoe UI','Malgun Gothic',sans-serif;
+    display:flex; justify-content:center; padding:24px 12px;
+  }
+  .sheet{width:100%; max-width:720px; display:flex; flex-direction:column; gap:14px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px 20px;}
+  .label{font-size:11px; color:var(--sub); letter-spacing:.03em; text-transform:uppercase; margin-bottom:10px;}
+
+  /* header */
+  .head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+  .head-left{display:flex; gap:12px; align-items:flex-start;}
+  .icon{width:46px; height:46px; border-radius:12px; flex:none;
+    background:linear-gradient(135deg,var(--cyan),var(--pink));}
+  .meta{font-size:11px; color:var(--sub); margin-bottom:4px;}
+  .title{font-size:22px; font-weight:800; display:flex; align-items:baseline; gap:8px;}
+  .title .code{font-size:14px; color:var(--sub); font-weight:600;}
+  .tagline{font-size:12px; color:var(--cyan); margin-top:4px;}
+  .head-right{text-align:right; font-size:11px; color:var(--sub);}
+  .head-right .opinion{font-size:15px; font-weight:800; color:var(--pink);}
+
+  /* price grid */
+  .grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  .stat{background:var(--card2); border-radius:10px; padding:10px; text-align:center;}
+  .stat .k{font-size:10px; color:var(--sub); margin-bottom:6px;}
+  .stat .v{font-size:16px; font-weight:800;}
+  .up{color:var(--red);} .down{color:var(--blue);} .pos{color:var(--green);}
+
+  .gauge-wrap{margin-top:16px;}
+  .gauge-track{position:relative; height:6px; border-radius:3px; margin:10px 0 6px;
+    background:linear-gradient(90deg,var(--blue),var(--pink));}
+  .gauge-dot{position:absolute; top:-5px; width:3px; height:16px; background:#fff; border-radius:2px;
+    transform:translateX(-50%);}
+  .gauge-labels{display:flex; justify-content:space-between; font-size:10px; color:var(--sub);}
+  .gauge-center{text-align:center; font-size:11px; color:var(--sub); margin-top:2px;}
+
+  /* score */
+  .score-row{display:flex; align-items:center; gap:18px;}
+  .score-circle{width:78px; height:78px; border-radius:50%; border:5px solid var(--cyan);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; flex:none;}
+  .score-circle .n{font-size:24px; font-weight:800; line-height:1;}
+  .score-circle .d{font-size:9px; color:var(--sub);}
+  .badge{display:inline-block; padding:4px 14px; border-radius:8px; font-weight:800; font-size:14px;}
+  .badge.buy{background:rgba(34,197,94,.15); color:var(--green); border:1px solid var(--green);}
+  .badge.hold{background:rgba(245,158,11,.15); color:var(--orange); border:1px solid var(--orange);}
+  .badge.sell{background:rgba(239,68,68,.15); color:var(--red); border:1px solid var(--red);}
+  .subscores{font-size:11px; color:var(--sub); margin-top:6px;}
+  .score-right{margin-left:auto; display:flex; gap:18px;}
+  .score-box{text-align:center;}
+  .score-box .k{font-size:10px; color:var(--sub);}
+  .score-box .v{font-size:15px; font-weight:800;}
+
+  /* bar chart */
+  .bar-row{display:flex; align-items:center; gap:10px; margin:8px 0;}
+  .bar-label{width:44px; font-size:11px; color:var(--sub); flex:none;}
+  .bar-track{flex:1; background:var(--card2); border-radius:5px; height:16px; position:relative; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:5px;}
+  .bar-fill.neg{background:var(--red);}
+  .bar-value{width:80px; text-align:right; font-size:12px; font-weight:700; flex:none;}
+
+  /* strengths / risks */
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .box{border-radius:12px; padding:14px; font-size:12px;}
+  .box.good{background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.35);}
+  .box.bad{background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.35);}
+  .box .box-title{font-weight:800; font-size:12px; margin-bottom:8px;}
+  .box.good .box-title{color:var(--green);}
+  .box.bad .box-title{color:var(--red);}
+  .box ul{margin:0; padding-left:16px; display:flex; flex-direction:column; gap:6px;}
+
+  /* conclusion */
+  .grid4b{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  .concl .k{font-size:10px; color:var(--sub); margin-bottom:6px;}
+  .concl .v{font-size:14px; font-weight:800;}
+
+  .footer{font-size:10px; color:var(--sub); line-height:1.6; padding:14px 4px 4px;}
+  .hashtags{margin-top:8px; color:var(--cyan);}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="card head">
+    <div class="head-left">
+      <div class="icon"></div>
+      <div>
+        <div class="meta">{{ stock.market }} · {{ analysis.tagline_top or "종목 분석" }} · {{ price.date }} 종가 기준</div>
+        <div class="title">{{ stock.name }} <span class="code">{{ stock.code }}</span></div>
+        <div class="tagline">{{ analysis.tagline or "" }}</div>
+      </div>
+    </div>
+    <div class="head-right">
+      {% if consensus.opinion_score %}
+      투자의견 컨센서스<br>
+      <span class="opinion">{{ consensus.opinion_score }}</span> / 5.0<br>
+      추정기관 {{ consensus.num_analysts or "-" }}곳
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">PRICE · 52주 위치</div>
+    <div class="grid4">
+      <div class="stat"><div class="k">현재가</div><div class="v">{{ price.close_fmt }}원</div></div>
+      <div class="stat"><div class="k">전일 대비</div>
+        <div class="v {{ 'up' if price.change_pct > 0 else 'down' if price.change_pct < 0 else '' }}">
+          {{ '▲' if price.change_pct > 0 else '▼' if price.change_pct < 0 else '-' }} {{ price.change_pct|abs }}%
+        </div>
+      </div>
+      <div class="stat"><div class="k">시가총액</div><div class="v">{{ market_cap.marcap_fmt }}</div></div>
+      <div class="stat"><div class="k">12개월 수익률</div>
+        <div class="v {{ 'pos' if price.ret_12m > 0 else 'down' }}">{{ '+' if price.ret_12m > 0 else '' }}{{ price.ret_12m }}%</div>
+      </div>
+    </div>
+    <div class="gauge-wrap">
+      <div class="gauge-track">
+        <div class="gauge-dot" style="left:{{ price.pos_52w_pct }}%;"></div>
+      </div>
+      <div class="gauge-labels">
+        <span>{{ price.low52_fmt }}원 ({{ price.low52_date }})</span>
+        <span>{{ price.high52_fmt }}원 ({{ price.high52_date }})</span>
+      </div>
+      <div class="gauge-center">현재 {{ price.close_fmt }}원 · 고점 대비 {{ price.from_high_pct }}%</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">종합 판단</div>
+    <div class="score-row">
+      <div class="score-circle">
+        <div class="n">{{ analysis.total_score or "-" }}</div>
+        <div class="d">/ 100</div>
+      </div>
+      <div>
+        <span class="badge {{ analysis.rating_class }}">{{ analysis.rating or "미평가" }}</span>
+        <div class="subscores">
+          {% if analysis.score_breakdown %}
+          산업 {{ analysis.score_breakdown.industry }} · 성장성 {{ analysis.score_breakdown.growth }} ·
+          재무 {{ analysis.score_breakdown.finance }} · 해자 {{ analysis.score_breakdown.moat }} ·
+          기술적 {{ analysis.score_breakdown.technical }} · 리스크관리 {{ analysis.score_breakdown.risk_mgmt }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="score-right">
+        <div class="score-box"><div class="k">컨센서스 목표주가</div>
+          <div class="v">{{ consensus.target_price_fmt or "-" }}</div></div>
+        <div class="score-box"><div class="k">상승여력</div>
+          <div class="v pos">{{ consensus.upside_pct_fmt or "-" }}</div></div>
+      </div>
+    </div>
+  </div>
+
+  {% if quarterly_operating_profit %}
+  <div class="card">
+    <div class="label">분기 영업이익 · 억원 (연결 기준)</div>
+    {% for q in quarterly_operating_profit %}
+    <div class="bar-row">
+      <div class="bar-label">{{ q.label }}</div>
+      <div class="bar-track">
+        <div class="bar-fill {{ 'neg' if q.value_eok < 0 else '' }}"
+             style="width:{{ q.bar_pct }}%; background:{{ q.color }};"></div>
+      </div>
+      <div class="bar-value">{{ q.value_fmt }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="two-col">
+    <div class="box good">
+      <div class="box-title">강점 {{ analysis.strengths|length }}</div>
+      <ul>{% for s in analysis.strengths %}<li>{{ s }}</li>{% endfor %}</ul>
+    </div>
+    <div class="box bad">
+      <div class="box-title">리스크 {{ analysis.risks|length }}</div>
+      <ul>{% for r in analysis.risks %}<li>{{ r }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="label">결론 · 어떻게 접근할 것인가</div>
+    <div class="grid4b">
+      <div class="concl"><div class="k">매수 구간</div><div class="v">{{ analysis.entry_range or "-" }}</div></div>
+      <div class="concl"><div class="k">목표주가</div><div class="v pos">{{ consensus.target_price_fmt or "-" }}</div></div>
+      <div class="concl"><div class="k">손절선</div><div class="v down">{{ analysis.stop_loss or "-" }}</div></div>
+      <div class="concl"><div class="k">권고 비중</div><div class="v">{{ analysis.recommended_weight or "-" }}</div></div>
+    </div>
+    {% if analysis.commentary %}
+    <div style="margin-top:12px; font-size:12px; color:var(--sub); line-height:1.6;">{{ analysis.commentary }}</div>
+    {% endif %}
+  </div>
+
+  <div class="footer">
+    본 리포트는 DART 공시자료, 한국투자증권(KIS) 실시간 시세, 네이버 컨센서스 데이터를 기반으로 자동 생성되었으며, 일부 판단(종합점수·강점/리스크·매매전략)은 주관적 분석이 반영되어 있습니다.
+    투자 판단의 참고 자료일 뿐 투자 권유가 아니며, 투자 책임은 본인에게 있습니다. 생성 시각: {{ generated_at }}
+    <div class="hashtags">#{{ stock.name }} #{{ stock.code }} #주식분석 #DART #컨센서스</div>
+  </div>
+
+</div>
+</body>
+</html>
