@@ -20,7 +20,7 @@ import data_naver
 import data_dart
 import data_kakao
 
-STOCK_LIST = ["삼성전자", "오킨스전자", "엔알비", "압타바이오"]
+STOCK_LIST = ["삼성전자", "오킨스전자", "엔알비", "압타바이오", "가온칩스"]
 PAGES_URL = "https://kdhyeon04.github.io/daily-stock-report/"
 
 
