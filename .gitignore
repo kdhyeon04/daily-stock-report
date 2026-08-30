@@ -3,5 +3,6 @@ __pycache__/
 *.pyc
 .env
 .kis_token.json
+.kakao_new_refresh_token
 docs_cache/
 data/*.json

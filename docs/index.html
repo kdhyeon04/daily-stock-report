@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>데일리 주식 브리핑</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --card:#131a2c; --card2:#0f1526; --line:#232b45;
+    --text:#eef1f8; --sub:#8792ad; --cyan:#22d3ee; --pink:#ec4899;
+    --green:#22c55e; --red:#ef4444; --orange:#f59e0b; --blue:#3b82f6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--text); font-family:'Segoe UI','Malgun Gothic',sans-serif;
+    display:flex; justify-content:center; padding:24px 12px;}
+  .sheet{width:100%; max-width:820px; display:flex; flex-direction:column; gap:14px;}
+  h1{font-size:20px; margin:0 0 2px;}
+  .updated{font-size:11px; color:var(--sub); margin-bottom:8px;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(360px,1fr)); gap:14px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px;}
+  .card-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;}
+  .name{font-size:16px; font-weight:800;}
+  .code{font-size:11px; color:var(--sub); margin-left:6px;}
+  .signal{font-size:11px; font-weight:700; padding:3px 10px; border-radius:7px;}
+  .signal.buy{background:rgba(34,197,94,.15); color:var(--green); border:1px solid var(--green);}
+  .signal.hold{background:rgba(245,158,11,.15); color:var(--orange); border:1px solid var(--orange);}
+  .signal.caution{background:rgba(239,68,68,.15); color:var(--red); border:1px solid var(--red);}
+  .signal.na{background:rgba(135,146,173,.15); color:var(--sub); border:1px solid var(--sub);}
+  .row{display:flex; justify-content:space-between; font-size:12px; color:var(--sub); padding:4px 0; border-top:1px solid var(--line);}
+  .row .v{color:var(--text); font-weight:700;}
+  .up{color:var(--red)!important;} .down{color:var(--blue)!important;} .pos{color:var(--green)!important;}
+  .price{font-size:20px; font-weight:800;}
+  .footer{font-size:10px; color:var(--sub); line-height:1.6; padding:14px 4px 4px;}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div>
+    <h1>📊 데일리 주식 브리핑</h1>
+    <div class="updated">업데이트: 2026.08.30 20:50 (자동 생성 · 규칙 기반 신호)</div>
+  </div>
+  <div class="grid">
+    
+    <div class="card">
+      <div class="card-head">
+        <div><span class="name">삼성전자</span><span class="code">005930</span></div>
+        <span class="signal buy">긍정적 (BUY WATCH)</span>
+      </div>
+      <div class="price down">
+        257,000원 ▼3.38%
+      </div>
+      <div class="row"><span>52주 위치</span><span class="v">61.7%</span></div>
+      <div class="row"><span>12개월 수익률</span><span class="v pos">+268.7%</span></div>
+      <div class="row"><span>컨센서스 목표가</span><span class="v">491,875원</span></div>
+      <div class="row"><span>상승여력</span><span class="v pos">+91.4%</span></div>
+      <div class="row"><span>최근분기 영업이익 QoQ</span><span class="v">+56.4%</span></div>
+    </div>
+    
+    <div class="card">
+      <div class="card-head">
+        <div><span class="name">오킨스전자</span><span class="code">080580</span></div>
+        <span class="signal buy">긍정적 (BUY WATCH)</span>
+      </div>
+      <div class="price up">
+        20,300원 ▲4.59%
+      </div>
+      <div class="row"><span>52주 위치</span><span class="v">66.8%</span></div>
+      <div class="row"><span>12개월 수익률</span><span class="v pos">+230.1%</span></div>
+      <div class="row"><span>컨센서스 목표가</span><span class="v">28,000원</span></div>
+      <div class="row"><span>상승여력</span><span class="v pos">+37.9%</span></div>
+      <div class="row"><span>최근분기 영업이익 QoQ</span><span class="v">+133.3%</span></div>
+    </div>
+    
+    <div class="card">
+      <div class="card-head">
+        <div><span class="name">엔알비</span><span class="code">475230</span></div>
+        <span class="signal na">데이터부족</span>
+      </div>
+      <div class="price down">
+        10,790원 ▼0.64%
+      </div>
+      <div class="row"><span>52주 위치</span><span class="v">21.6%</span></div>
+      <div class="row"><span>12개월 수익률</span><span class="v down">-13.3%</span></div>
+      <div class="row"><span>컨센서스 목표가</span><span class="v">-</span></div>
+      <div class="row"><span>상승여력</span><span class="v pos">-</span></div>
+      <div class="row"><span>최근분기 영업이익 QoQ</span><span class="v">+26.7%</span></div>
+    </div>
+    
+    <div class="card">
+      <div class="card-head">
+        <div><span class="name">압타바이오</span><span class="code">293780</span></div>
+        <span class="signal na">데이터부족</span>
+      </div>
+      <div class="price up">
+        6,170원 ▲1.48%
+      </div>
+      <div class="row"><span>52주 위치</span><span class="v">32.8%</span></div>
+      <div class="row"><span>12개월 수익률</span><span class="v down">-20.7%</span></div>
+      <div class="row"><span>컨센서스 목표가</span><span class="v">-</span></div>
+      <div class="row"><span>상승여력</span><span class="v pos">-</span></div>
+      <div class="row"><span>최근분기 영업이익 QoQ</span><span class="v">+41.0%</span></div>
+    </div>
+    
+  </div>
+  <div class="footer">
+    이 대시보드는 DART·한국투자증권(KIS)·네이버 컨센서스 데이터를 기반으로 매일 자동 생성됩니다.
+    "신호"는 컨센서스 상승여력·최근 실적 추이 등 단순 규칙으로 산출된 것으로, 사람의 심층 분석이 아니며 투자 권유가 아닙니다. 투자 판단과 책임은 본인에게 있습니다.
+  </div>
+</div>
+</body>
+</html>

@@ -12,6 +12,10 @@ if not DART_API_KEY:
 KIS_APP_KEY = os.environ.get("KIS_APP_KEY", "").strip()
 KIS_APP_SECRET = os.environ.get("KIS_APP_SECRET", "").strip()
 
+KAKAO_REST_API_KEY = os.environ.get("KAKAO_REST_API_KEY", "").strip()
+KAKAO_CLIENT_SECRET = os.environ.get("KAKAO_CLIENT_SECRET", "").strip()
+KAKAO_REFRESH_TOKEN = os.environ.get("KAKAO_REFRESH_TOKEN", "").strip()
+
 DATA_DIR = BASE_DIR / "data"
 REPORTS_DIR = BASE_DIR / "reports"
 DATA_DIR.mkdir(exist_ok=True)
