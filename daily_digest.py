@@ -7,8 +7,11 @@
 대체한다 (상승여력·QoQ 실적 추이 기준).
 """
 import datetime as dt
+from zoneinfo import ZoneInfo
 import OpenDartReader
 from jinja2 import Environment, FileSystemLoader
+
+KST = ZoneInfo("Asia/Seoul")
 
 import config
 import ticker
@@ -94,7 +97,7 @@ def build_dashboard() -> list:
 def render_dashboard(views: list) -> str:
     env = Environment(loader=FileSystemLoader(str(config.BASE_DIR)))
     tpl = env.get_template("dashboard_template.html")
-    html = tpl.render(stocks=views, generated_at=dt.datetime.now().strftime("%Y.%m.%d %H:%M"))
+    html = tpl.render(stocks=views, generated_at=dt.datetime.now(KST).strftime("%Y.%m.%d %H:%M") + " KST")
 
     docs_dir = config.BASE_DIR / "docs"
     docs_dir.mkdir(exist_ok=True)
@@ -104,7 +107,7 @@ def render_dashboard(views: list) -> str:
 
 
 def build_kakao_text(views: list) -> str:
-    today = dt.date.today().strftime("%y.%m.%d")
+    today = dt.datetime.now(KST).strftime("%y.%m.%d")
     lines = [f"📊 오늘의 주식 브리핑 ({today})"]
     for v in views:
         arrow = "▲" if v["change_pct"] and v["change_pct"] > 0 else "▼" if v["change_pct"] and v["change_pct"] < 0 else "-"
